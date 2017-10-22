@@ -14,22 +14,26 @@ $ python -m pip install -r requirements.txt
 # Usage
 $ cd dbus-nm-vpn-batch-importer/
 
-$ python netman_ovpn_importer.py FOLDER_WITH_OVPN_FILES YOUR_VPN_LOGIN_ID
+$ python netman_ovpn_importer.py FOLDER_WITH_OVPN_FILES YOUR_VPN_LOGIN_ID --vpn_ask_password
 
 # Usage example
 $ cd dbus-nm-vpn-batch-importer/
 
-$ python netman_ovpn_importer.py ../vpn/ pikachu@spacekitcat.com
+$ python netman_ovpn_importer.py ../vpn/ pikachu@spacekitcat.com --vpn_ask_password
+
+Enter the password for your VPN account: 
 
 Scanning for *.ovpn files in ../vpn/
 
-Processing ovpn files: Done.    
+Processing ovpn files: Done.                                                        
 
-Adding profiles to Network Manager:  Done.  
+Loaded 2256 oVPN connections. 
 
-All done. Please restart NetworkManager or reboot your system. 
+Adding profiles to Network Manager:  Done.                                                 
 
-Example: sudo systemctl restart NetworkManager.
+Reloading connections: Done.      
+
+Scanning for *.ovpn files in ../vpn/
 
 # License
 MIT

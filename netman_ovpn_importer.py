@@ -2,6 +2,8 @@ import os
 import sys
 import argparse
 import logging
+import getpass
+import pprint as pp
 
 from imports.networkmanager import NetworkManagerConnectionConfig
 from imports.openvpn import process_ovpn_list
@@ -25,6 +27,15 @@ def fix_trailing_slash(path):
     path = path + '/'
   return path
 
+def ask_password():
+  password = ''
+  try:
+    password = getpass.getpass(prompt='Enter the password for your VPN account: ')
+  except Exception as err:
+    sys.exit(1)
+
+  return password
+
 def main():
   parser = argparse.ArgumentParser(description='Converts *.opvn files in a \
       specified directory to NetworkManager connection profiles.')
@@ -40,6 +51,11 @@ def main():
       help='VPN login name')
   
   parser.add_argument(
+      '--vpn_ask_password', 
+      action='store_true',
+      help='Triggers a secure password promt to read the VPN login password.')
+
+  parser.add_argument(
       '--cert_path', 
       metavar='cert_path',
       default=os.path.expanduser('~/.cert/nm-openvpn/'),
@@ -50,21 +66,28 @@ def main():
   cert_path = fix_trailing_slash(args.cert_path)
 
   create_ifnot_exist(cert_path)
- 
+
+  vpn_login_password = ''
+  if args.vpn_ask_password:
+    vpn_login_password = ask_password()
+
   sys.stdout.write('Scanning for *.ovpn files in ' + args.input_directory)
   ovpn_input_files = os.scandir(args.input_directory)
   vpn_profiles = process_ovpn_list(ovpn_input_files)
 
   counter = 1
   profile_count = len(vpn_profiles)
+  sys.stdout.write('Loaded ' + str(profile_count) + ' VPN connections. \n')
   status_line_prefix = 'Adding profiles to Network Manager: '
+  
   for profile_id, profile in vpn_profiles.items():
     sys.stdout.write(status_line_prefix + str(counter) + ' of ' + str(profile_count) + '                     \r')
     
-    netman_config = NetworkManagerConnectionConfig(profile_id + '_', args.vpn_login_id)
-    trans_profile = openvpn_to_netman(profile, cert_path, profile_id)
+    netman_config = NetworkManagerConnectionConfig(profile_id + '_', args.vpn_login_id, vpn_login_password)
+    trans_profile = openvpn_to_netman(profile, cert_path, profile_id + '_')
     netman_config.sync_with(trans_profile)
-    NetworkManager.Settings.AddConnection(netman_config.get_settings())
+    path = NetworkManager.Settings.AddConnection(netman_config.get_settings())
+    
     counter = counter + 1
 
   sys.stdout.write(status_line_prefix + ' Done.                                                 \n')

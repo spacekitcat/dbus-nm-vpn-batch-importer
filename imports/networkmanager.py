@@ -34,15 +34,16 @@ class NetworkManagerConnectionConfigGroup:
 
 
 class NetworkManagerConnectionConfig:
-  def __init__(self, connection_id, vpn_login_id):
+  def __init__(self, connection_id, vpn_login_id, vpn_login_pass):
     
     self.connection_id = connection_id
     
     self.settings = dict()
-    self.settings['connection'] = self.init_connection_group()
-    self.settings['vpn']        = self.init_vpn_group(vpn_login_id)
-    self.settings['ipv4']       = self.init_ipv4_group()
-    self.settings['ipv6']       = self.init_ipv6_group()
+    self.settings['connection']  = self.init_connection_group()
+    self.settings['vpn']         = self.init_vpn_group(vpn_login_id, vpn_login_pass)
+    #self.settings['vpn-secret']         = NetworkManagerConnectionConfigGroup({})
+    self.settings['ipv4']        = self.init_ipv4_group()
+    self.settings['ipv6']        = self.init_ipv6_group()
 
   def init_connection_group(self):
     return NetworkManagerConnectionConfigGroup({'autoconnect': False, 'id': self.connection_id, 'permissions': [], 'type': 'vpn', 'uuid': str(uuid.uuid4())})
@@ -54,10 +55,10 @@ class NetworkManagerConnectionConfig:
     return NetworkManagerConnectionConfigGroup({'address-data': [], 'addresses': [], 'dns': [], 'dns-search': [], 'ip6-privacy': 0, 'method': 'auto', 
       'route-data': [], 'routes': []})
 
-  def init_vpn_group(self, user_name):
+  def init_vpn_group(self, user_name, password):
     return NetworkManagerConnectionConfigGroup({
           'data': 
-            {
+          {
               'ca': '',
               'cipher': '',
               'auth': '',
@@ -76,10 +77,15 @@ class NetworkManagerConnectionConfig:
               'ta': '',
               'ta-dir': '1',
               'tunnel-mtu': '1500',
-              'username': user_name
-            },
-
-          'service-type': 'org.freedesktop.NetworkManager.openvpn'}, 'data')
+              'username': user_name,
+              'password-flags': str(password != None)
+          },
+          'secrets':
+          {
+              'password': password
+          },
+          'service-type': 'org.freedesktop.NetworkManager.openvpn'
+        }, 'data')
 
   def get_settings(self):
     dict_for_dbus = dict()
