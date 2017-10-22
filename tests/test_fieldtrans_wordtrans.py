@@ -1,5 +1,6 @@
 import unittest
-from openvpn_netman_conversion import FieldTranslationRule 
+
+from imports.openvpn_netman_conversion import FieldTranslationRule 
 
 class TestFieldTransWordTrans(unittest.TestCase):
   def setUp(self):

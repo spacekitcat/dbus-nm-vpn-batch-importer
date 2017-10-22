@@ -1,5 +1,6 @@
 import unittest
-from networkmanager import NetworkManagerConnectionConfigGroup
+
+from imports.networkmanager import NetworkManagerConnectionConfigGroup
 
 class TestDefaultStateNetworkManagerNetworkManagerConnectionConfigGroup(unittest.TestCase):
   def setUp(self):
