@@ -68,9 +68,10 @@ def main():
     counter = counter + 1
 
   sys.stdout.write(status_line_prefix + ' Done.                                                 \n')
-
-  sys.stdout.write('All done. Please restart NetworkManager or reboot your '
-      'system. Example: sudo systemctl restart NetworkManager.\n\n')
+  
+  sys.stdout.write('Reloading connections: ...                                                  \r')
+  NetworkManager.Settings.ReloadConnections()
+  sys.stdout.write('Reloading connections: Done.                                                \n')
 
 if __name__ == '__main__':
   main()
