@@ -33,8 +33,6 @@ Adding profiles to Network Manager:  Done.
 
 Reloading connections: Done.      
 
-Scanning for *.ovpn files in ../vpn/
-
 # License
 MIT
 
