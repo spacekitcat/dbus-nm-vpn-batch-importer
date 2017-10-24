@@ -1,7 +1,7 @@
 # VPN Batch Importer for Network Manager (dbus-nm-vpn-batch-importer)
 Imports large sets of OpenVPN formatted VPN files into Dbus Network Manager.
 
-# Requirements (without pip)
+# Requirements
 Python 3.x
 
 pip (gets dbus_python 1.2.x)
@@ -32,6 +32,11 @@ Loaded 2256 oVPN connections.
 Adding profiles to Network Manager:  Done.                                                 
 
 Reloading connections: Done.      
+
+# Unit tests
+$ cd dbus-nm-vpn-batch-importer/
+
+$ python -m unittest
 
 # License
 MIT
